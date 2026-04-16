@@ -41,57 +41,30 @@
      *
      * This script automatically fills inputs with saved settings.
      */
+    document.addEventListener('DOMContentLoaded', () => {    
+        const stations = {{ stations_json | safe }};
 
+        const station_id_input = document.querySelector('#station_id');
+        const station_name_input = document.querySelector('#station_name');
+        const load_btn = document.querySelector('#load_station_id_btn');
 
-
-    document.addEventListener('DOMContentLoaded', () => {       
-        
-        const station_id = document.querySelector('#station_id');
-        const station_name = document.querySelector('#station_name');
-
-        const load_station_id_btn = document.querySelector('#load_station_id_btn');
-        
-
-        load_station_id_btn.addEventListener('click', async () => {
-            let id = station_id.value.trim();
-            if (!id) {
-                alert("No Bus Stop ID provided");
-                return;
-            }
-            const busStopId = id.padStart(5, '0');
-
-            const apiKey = {{ api_key | safe }};
-            if (!id) {
-                alert("No API Key provided");
-                return;
-            }
-
-            const url = 'https://datamall2.mytransport.sg/ltaodataservice/BusStops';
+        load_btn.addEventListener('click', () => {
+            // Get the ID and pad it to 5 digits (e.g., "123" -> "00123")
+            let id = station_id_input.value.trim().padStart(5, '0');
             
+            if (!id || id === "00000") {
+                alert("Please enter a valid Bus Stop ID");
+                return;
+            }
 
-            try {
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'AccountKey': apiKey,
-                        'accept': 'application/json'
-                    }
-                });
+            // Look up the ID in your pre-loaded JSON
+            const station_name = stations[id];
 
-                if (!response.ok) throw new Error('Error in retrieving bus stops from LTA Datamall.');
-                
-                const busStops = data.value || [];
-                const busStopInfo = busStops.find(x => x.BusStopCode === busStopId);
-                if (busStopInfo) {
-                    station_name.value = busStopInfo.Description;
-                } else {
-                    station_name.value = "Unknown";
-                    // alert("Bus stop not found.");
-                }
-
-            } catch (error) {
-                alert(error.message);
-                station_name.value = '';
+            if (station_name) {
+                station_name_input.value = station_name;
+            } else {
+                station_name_input.value = "Unknown Stop";
+                console.log(`ID ${id} not found in pre-loaded stations.`);
             }
         });
     });
