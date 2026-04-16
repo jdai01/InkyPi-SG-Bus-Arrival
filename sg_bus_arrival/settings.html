@@ -44,7 +44,6 @@
     document.addEventListener('DOMContentLoaded', () => {    
         const stations = {{ stations_json | safe }};
         const apiKey = "{{ api_key | safe }}";
-        console.log(apiKey)
 
         const station_id_input = document.querySelector('#station_id');
         const station_name_input = document.querySelector('#station_name');
@@ -67,7 +66,7 @@
                 station_name_input.value = station_name;
                 console.log(`Bus Stop ID ${id} found! It is ${station_name}.`);
 
-                // loadBusesDropdown(id);
+                loadBusesDropdown(id);
             } else {
                 station_name_input.value = "Unknown Stop";
                 console.log(`ID ${id} not found in pre-loaded stations.`);
@@ -89,6 +88,7 @@
 
                 if (!response.ok) throw new Error('API Error');
                 const data = await response.json();
+                console.log(data.Services)
 
                 // Extract the service numbers (e.g., "166", "52", etc.)
                 const services = data.Services.map(s => s.ServiceNo);
