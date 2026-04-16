@@ -2,6 +2,19 @@ from plugins.base_plugin.base_plugin import BasePlugin
 from PIL import Image, ImageDraw, ImageFont
 from utils.app_utils import get_font
 import logging
+from datetime import datetime
+import aiohttp
+import asyncio
+import certifi
+import csv
+import io
+import logging
+import json
+import os
+import ssl
+import pytz
+import requests
+from flask import current_app
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +27,32 @@ class SGBusArrival(BasePlugin):
     to InkyPi for display. Plugin authors can use this as a starting point
     for building custom plugins.
     """
+    def __init__(self, config, **dependencies):
+        super().__init__(config, **dependencies)
+
+        self.__isInitialised = True
+        self.__api_key = None
+
+    def generate_settings_template(self):
+        template_params = super().generate_settings_template()
+        template_params['api_key'] = {
+            "required": True,
+            "service": "LTA's DataMall",
+            "expected_key": "LTA_DATAMALL_API_KEY"
+        }
+        template_params['style_settings'] = True
+        template_params['isInitialised'] = self.__isInitialised
+        template_params['api_key'] = self.__api_key
+
+        try:
+            device_config = current_app.config.get('DEVICE_CONFIG')
+            logger.info(current_app.__str__)
+
+        except:
+            logger.info("== No device_config found. ==")
+            
+
+        return template_params
 
     def generate_image(self, settings, device_config):
         """
@@ -35,6 +74,16 @@ class SGBusArrival(BasePlugin):
             PIL.Image.Image:
                 The rendered image to be displayed on the device.
         """
+
+        if self.__isInitialised:
+            self.__api_key = device_config.load_env_key("LTA_DATAMALL_API_KEY")
+            self.__isInitialised = False
+
+
+        
+
+
+
         # Example: load a value from plugin settings
         text = settings.get("title") or "Hello World"
 
