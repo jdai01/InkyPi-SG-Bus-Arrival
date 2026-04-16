@@ -63,7 +63,7 @@ def _save_stations_cache(stations):
     """Write station index to cache file."""
     try:
         with open(CACHE_FILE, "w") as f:
-            json.dump(stations, f)
+            json.dump(stations, f, indent=4)
         logger.info("Saved station index to cache")
     except Exception as e:
         logger.warning(f"Could not write station cache: {e}")
@@ -145,8 +145,6 @@ class SGBusArrival(BasePlugin):
     """
     def __init__(self, config, **dependencies):
         super().__init__(config, **dependencies)
-
-        self.__api_key = None
 
     def generate_settings_template(self):
         template_params = super().generate_settings_template()
