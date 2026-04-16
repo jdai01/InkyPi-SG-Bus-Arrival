@@ -43,7 +43,7 @@
      */
     document.addEventListener('DOMContentLoaded', () => {    
         const stations = {{ stations_json | safe }};
-        const apiKey = {{ api_key | safe }};
+        const apiKey = "{{ api_key | safe }}";
         console.log(api_key)
 
         const station_id_input = document.querySelector('#station_id');
