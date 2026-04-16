@@ -21,8 +21,8 @@
     </div>
 
     <div class="form-group">
-        <label for="sel_lines" class="form-label">Buses</label>
-        <div id="lineCheckboxes" class="form-group" style="display:flex; flex-wrap:wrap; gap:6px;">
+        <label for="sel_lines" class="form-label">Buses: </label>
+        <div id="lineDropdown" class="form-group" style="display:flex; flex-wrap:wrap; gap:6px;">
             <span style="opacity:0.5;">Select a bus stop first</span>
         </div>
     </div>
@@ -43,10 +43,12 @@
      */
     document.addEventListener('DOMContentLoaded', () => {    
         const stations = {{ stations_json | safe }};
+        const apiKey = {{ api_key_value | safe }};
 
         const station_id_input = document.querySelector('#station_id');
         const station_name_input = document.querySelector('#station_name');
         const load_btn = document.querySelector('#load_station_id_btn');
+        const bus_line_container = document.getElementById('lineDropdown');
 
         load_btn.addEventListener('click', () => {
             // Get the ID and pad it to 5 digits (e.g., "123" -> "00123")
@@ -62,10 +64,59 @@
 
             if (station_name) {
                 station_name_input.value = station_name;
+                loadStationDropdown(id);
             } else {
                 station_name_input.value = "Unknown Stop";
                 console.log(`ID ${id} not found in pre-loaded stations.`);
             }
         });
+
+        async function loadStationDropdown(station_id) {
+            BUS_ARRIVAL_URL = "https://datamall2.mytransport.sg/ltaodataservice/v3/BusArrival"
+
+            bus_line_container.innerHTML = '<span style="opacity:0.5;">Fetching buses...</span>';
+
+            try {
+                const response = await fetch(`${BUS_ARRIVAL_URL}?BusStopCode=${station_id}`, {
+                    headers: { 
+                        'AccountKey': apiKey,
+                        'accept': 'application/json' 
+                    }
+                });
+
+                if (!response.ok) throw new Error('API Error');
+                const data = await response.json();
+
+                // Extract the service numbers (e.g., "166", "52", etc.)
+                const services = data.Services.map(s => s.ServiceNo);
+
+                if (!services || services.length === 0) {
+                    bus_line_container.innerHTML = '<span style="color:red;">No buses found for this stop.</span>';
+                    return;
+                }
+
+                bus_line_container.innerHTML = '';
+
+                // Create a checkbox for each bus
+                services.forEach(service => {
+                    const wrapper = document.createElement('div');
+                    // Corrected styles
+                    wrapper.style.display = 'flex';
+                    wrapper.style.alignItems = 'center'; 
+                    wrapper.style.padding = '4px 8px';
+                    wrapper.style.border = '1px solid #ddd';
+                    wrapper.style.borderRadius = '4px';
+
+                    wrapper.innerHTML = `
+                        <input type="checkbox" name="selected_buses[]" value="${service}" id="bus_${service}" style="margin-right:5px;">
+                        <label for="bus_${service}" style="margin:0; cursor:pointer;">${service}</label>
+                    `;
+                    bus_line_container.appendChild(wrapper);
+                });
+            } catch (error) {
+                console.error("Fetch error:", error);
+                bus_line_container.innerHTML = '<span style="color:red;">Failed to load bus lines.</span>';
+            }
+        }
     });
 </script>

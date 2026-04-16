@@ -166,6 +166,7 @@ class SGBusArrival(BasePlugin):
             stations = {}
 
         template_params['stations_json'] = json.dumps(stations)
+        template_params['api_key'] = api_key
 
 
         return template_params
