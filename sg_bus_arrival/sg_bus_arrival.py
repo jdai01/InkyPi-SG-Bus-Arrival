@@ -30,7 +30,6 @@ class SGBusArrival(BasePlugin):
     def __init__(self, config, **dependencies):
         super().__init__(config, **dependencies)
 
-        self.__isInitialised = True
         self.__api_key = None
 
     def generate_settings_template(self):
@@ -41,18 +40,9 @@ class SGBusArrival(BasePlugin):
             "expected_key": "LTA_DATAMALL_API_KEY"
         }
         template_params['style_settings'] = True
-        template_params['isInitialised'] = self.__isInitialised
-        template_params['api_key'] = self.__api_key
 
-        try:
-            device_config = current_app.config.get('DEVICE_CONFIG')
-            logger.info(device_config)
-            logger.info(f"'config_file': {getattr(device_config, 'config_file')}")
-            logger.info(f"'get_config': {getattr(device_config, 'get_config')}")
-            logger.info(f"{device_config.load_env_key("LTA_DATAMALL_API_KEY")}")
-
-        except:
-            logger.info("== No device_config found. ==")
+        device_config = current_app.config.get('DEVICE_CONFIG')
+        self.__api_key = device_config.load_env_key("LTA_DATAMALL_API_KEY")
             
 
         return template_params
@@ -77,16 +67,6 @@ class SGBusArrival(BasePlugin):
             PIL.Image.Image:
                 The rendered image to be displayed on the device.
         """
-
-        if self.__isInitialised:
-            self.__api_key = device_config.load_env_key("LTA_DATAMALL_API_KEY")
-            self.__isInitialised = False
-
-
-        
-
-
-
         # Example: load a value from plugin settings
         text = settings.get("title") or "Hello World"
 

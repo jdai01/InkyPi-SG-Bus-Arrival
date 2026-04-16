@@ -1,18 +1,3 @@
-<div id="initialise_container">
-    <h4>Initialisation</h4>
-
-    To initialise this page, please following steps:
-    <ol>
-        <li>Obtain API Key from <a href="https://datamall.lta.gov.sg/content/datamall/en.html">LTA's Datamall</a>.</li>
-        <li>Go to <a href="/api-keys">API Keys</a> page and enter your API key under <code>LTA_DATAMALL_API_KEY</code> and save entry.</li>
-        <li>Go back to <a href="/plugin/sg_bus_arrival">SG Bus Arrival</a> page and click on "Update Now".</li>
-        <li>Refresh current page and you should be able to access the settings.</li>
-    </ol> 
-</div>
-
-<div id="valid_container"style="display: none;">
-
-
 <div class="form-group">
     <label class="form-label">Arrival Board</label>
     <div id="watchList"></div>
@@ -45,7 +30,6 @@
     <button type="button" id="addWatchBtn" class="form-input collapsible" onclick="addWatch()" disabled>Add to Board</button>
 </div>
 
-</div>
 
 <script>
     /**
@@ -57,20 +41,6 @@
      *
      * This script automatically fills inputs with saved settings.
      */
-    let isInitialised = {{ isInitialised | lower}};
-    console.log(isInitialised)
-
-    const initDiv = document.getElementById('initialise_container');
-    const validDiv = document.getElementById('valid_container');
-
-    if (isInitialised === true) {
-        initDiv.style.display = 'block';
-        validDiv.style.display = 'none';
-    } else {
-        initDiv.style.display = 'none';
-        validDiv.style.display = 'block';
-    }
-
 
 
 
