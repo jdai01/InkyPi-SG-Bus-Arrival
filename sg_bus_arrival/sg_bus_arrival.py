@@ -49,8 +49,7 @@ class SGBusArrival(BasePlugin):
             logger.info(device_config)
             logger.info(f"'config_file': {getattr(device_config, 'config_file')}")
             logger.info(f"'get_config': {getattr(device_config, 'get_config')}")
-            logger.info(f"'load_env_key': {getattr(device_config, 'load_env_key')}")
-            logger.info(f"'read_config': {getattr(device_config, 'read_config')}")
+            logger.info(f"{device_config.load_env_key("LTA_DATAMALL_API_KEY")}")
 
         except:
             logger.info("== No device_config found. ==")
