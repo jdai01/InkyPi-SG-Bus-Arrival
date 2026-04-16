@@ -46,7 +46,11 @@ class SGBusArrival(BasePlugin):
 
         try:
             device_config = current_app.config.get('DEVICE_CONFIG')
-            logger.info(current_app.config.__str__)
+            logger.info(device_config)
+            logger.info(f"'config_file': {getattr(device_config, 'config_file')}")
+            logger.info(f"'get_config': {getattr(device_config, 'get_config')}")
+            logger.info(f"'load_env_key': {getattr(device_config, 'load_env_key')}")
+            logger.info(f"'read_config': {getattr(device_config, 'read_config')}")
 
         except:
             logger.info("== No device_config found. ==")
