@@ -116,7 +116,7 @@ def _fetch_station_index(api_key):
 
         skip += 500
 
-    df = pd.DataFrame(all_stops[:10])
+    df = pd.DataFrame(all_stops)
     df = df.set_index("BusStopCode")
     complexes = df['Description'].to_dict()
 
