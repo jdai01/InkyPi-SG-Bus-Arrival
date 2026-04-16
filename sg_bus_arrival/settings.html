@@ -1,7 +1,35 @@
 <div class="form-group">
-    <label for="title" class="form-label">Title:</label>
-    <input type="text" id="title" name="title" placeholder="Hello World" required class="form-input">
+    <label class="form-label">Arrival Board</label>
+    <div id="watchList"></div>
+    <input type="hidden" id="watches" name="watches" value="[]">
 </div>
+
+<div class="form-group" style="border: 1px solid rgba(128,128,128,0.3); border-radius: 8px; padding: 12px;">
+    <label class="form-label">Add Bus Stop</label>
+
+    <div class="form-group">
+        <label class="form-label" for="sel_station" >Bus Stop: </label>
+        <div class="form-group">
+            <span>ID </span>
+            <input type="text" id="station_id" class="form-input" placeholder="Enter Bus Stop ID...">
+            <button type="button" id="load_station_id_btn" class="action-button compact">Load</button>
+        </div>
+        <div class="form-group">
+            <span>Name </span>
+            <input readonly type="text" id="station_name" name="station_name" class="form-input" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="sel_lines" class="form-label">Buses</label>
+        <div id="lineCheckboxes" class="form-group" style="display:flex; flex-wrap:wrap; gap:6px;">
+            <span style="opacity:0.5;">Select a bus stop first</span>
+        </div>
+    </div>
+
+    <button type="button" id="addWatchBtn" class="form-input collapsible" onclick="addWatch()" disabled>Add to Board</button>
+</div>
+
 
 <script>
     /**
@@ -13,10 +41,31 @@
      *
      * This script automatically fills inputs with saved settings.
      */
-    document.addEventListener('DOMContentLoaded', () => {        
-        if (loadPluginSettings) {
-            // Populate text inputs
-            document.getElementById('title').value = pluginSettings.title;
-        }
+    document.addEventListener('DOMContentLoaded', () => {    
+        const stations = {{ stations_json | safe }};
+
+        const station_id_input = document.querySelector('#station_id');
+        const station_name_input = document.querySelector('#station_name');
+        const load_btn = document.querySelector('#load_station_id_btn');
+
+        load_btn.addEventListener('click', () => {
+            // Get the ID and pad it to 5 digits (e.g., "123" -> "00123")
+            let id = station_id_input.value.trim().padStart(5, '0');
+            
+            if (!id || id === "00000") {
+                alert("Please enter a valid Bus Stop ID");
+                return;
+            }
+
+            // Look up the ID in your pre-loaded JSON
+            const station_name = stations[id];
+
+            if (station_name) {
+                station_name_input.value = station_name;
+            } else {
+                station_name_input.value = "Unknown Stop";
+                console.log(`ID ${id} not found in pre-loaded stations.`);
+            }
+        });
     });
 </script>
