@@ -43,7 +43,8 @@
      */
     document.addEventListener('DOMContentLoaded', () => {    
         const stations = {{ stations_json | safe }};
-        const apiKey = {{ api_key_value | safe }};
+        const apiKey = {{ api_key | safe }};
+        console.log(api_key)
 
         const station_id_input = document.querySelector('#station_id');
         const station_name_input = document.querySelector('#station_name');
@@ -64,14 +65,16 @@
 
             if (station_name) {
                 station_name_input.value = station_name;
-                loadStationDropdown(id);
+                console.log(`Bus Stop ID ${id} found! It is ${station_name}.`);
+
+                // loadBusesDropdown(id);
             } else {
                 station_name_input.value = "Unknown Stop";
                 console.log(`ID ${id} not found in pre-loaded stations.`);
             }
         });
 
-        async function loadStationDropdown(station_id) {
+        async function loadBusesDropdown(station_id) {
             BUS_ARRIVAL_URL = "https://datamall2.mytransport.sg/ltaodataservice/v3/BusArrival"
 
             bus_line_container.innerHTML = '<span style="opacity:0.5;">Fetching buses...</span>';
