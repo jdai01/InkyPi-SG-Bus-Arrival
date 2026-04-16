@@ -1,6 +1,0 @@
-{
-    "display_name": "Template Plugin",
-    "id": "plugin_template",
-    "class": "Template",
-    "repository": "https://github.com/fatihak/InkyPi-Plugin-Template"
-}

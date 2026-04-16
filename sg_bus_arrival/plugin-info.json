@@ -1,0 +1,6 @@
+{
+    "display_name": "SG Bus Arrival",
+    "id": "sg_bus_arrival",
+    "class": "SGBusArrival",
+    "repository": "https://github.com/jdai01/InkyPi-SG-Bus-Arrival"
+}

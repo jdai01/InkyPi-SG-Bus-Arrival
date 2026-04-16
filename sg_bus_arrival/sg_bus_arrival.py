@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class Template(BasePlugin):
+class SGBusArrival(BasePlugin):
     """
     Example InkyPi plugin template.
 
