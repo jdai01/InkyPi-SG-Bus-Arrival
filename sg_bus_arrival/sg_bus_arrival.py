@@ -162,7 +162,7 @@ class SGBusArrival(BasePlugin):
         api_key = device_config.load_env_key("LTA_DATAMALL_API_KEY")
 
         try:
-            stations = self._get_station_index(api_key)
+            stations = _get_station_index(api_key)
         except Exception as e:
             logger.error(f"Failed to preload station index: {e}")
             stations = {}
