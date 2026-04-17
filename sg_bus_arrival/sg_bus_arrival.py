@@ -191,6 +191,13 @@ class SGBusArrival(BasePlugin):
             PIL.Image.Image:
                 The rendered image to be displayed on the device.
         """
+        bus_stop_id = settings.get('station_id', 'None')
+        bus_list = settings.get('selected_buses', '[]')
+
+        logger.info(f"Bus stop id: {bus_stop_id}")
+        logger.info(f"Buses selected: {bus_list}")
+
+
         # Example: load a value from plugin settings
         text = settings.get("title") or "Hello World"
 

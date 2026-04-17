@@ -11,7 +11,7 @@
         <label class="form-label" for="sel_station" >Bus Stop: </label>
         <div class="form-group">
             <span>ID </span>
-            <input type="text" id="station_id" class="form-input" placeholder="Enter Bus Stop ID...">
+            <input type="text" id="station_id" name="station_id" class="form-input" placeholder="Enter Bus Stop ID...">
             <button type="button" id="load_station_id_btn" class="action-button compact">Load</button>
         </div>
         <div class="form-group">
@@ -21,10 +21,18 @@
     </div>
 
     <div class="form-group">
-        <label for="sel_lines" class="form-label">Buses: </label>
-        <div id="lineDropdown" class="form-group" style="display:flex; flex-wrap:wrap; gap:6px;">
-            <span style="opacity:0.5;">Select a bus stop first</span>
+        <label class="form-label">Bus Services to Display:</label>
+        
+        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+            <input type="text" id="bus_input_field" class="form-input" placeholder="e.g. 166, 5, 24" style="flex: 1;">
+            <button type="button" id="add_bus_btn" class="btn btn-secondary">Add</button>
         </div>
+
+        <div id="bus_list_container" style="display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border: 1px dashed #ccc; border-radius: 4px; min-height: 44px;">
+            <span id="empty_msg" style="opacity:0.5;">No buses added yet</span>
+        </div>
+
+        <input type="hidden" name="selected_buses" id="selected_buses_hidden">
     </div>
 
     <button type="button" id="addWatchBtn" class="form-input collapsible" onclick="addWatch()" disabled>Add to Board</button>
@@ -121,5 +129,75 @@
                 bus_line_container.innerHTML = '<span style="color:red;">Failed to load bus lines.</span>';
             }
         }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const busInput = document.getElementById('bus_input_field');
+        const addBtn = document.getElementById('add_bus_btn');
+        const container = document.getElementById('bus_list_container');
+        const hiddenInput = document.getElementById('selected_buses_hidden');
+
+        // 1. Load existing buses from InkyPi settings (passed from Python)
+        // We assume Python sends this as a JSON string or comma-separated list
+        let busList = [];
+        const savedValue = `{{ pluginSettings.selected_buses | safe if pluginSettings.selected_buses else '' }}`;
+        
+        if (savedValue) {
+            try {
+                busList = JSON.parse(savedValue);
+            } catch (e) {
+                // Fallback for comma-separated string
+                busList = savedValue.split(',').filter(x => x);
+            }
+        }
+
+        // 2. Function to redraw the UI and update the hidden input
+        function refreshBusDisplay() {
+            container.innerHTML = '';
+            
+            if (busList.length === 0) {
+                container.innerHTML = '<span style="opacity:0.5;">No buses added yet</span>';
+            }
+
+            busList.forEach((bus, index) => {
+                const pill = document.createElement('div');
+                pill.style.cssText = "display:flex; align-items:center; background:#007bff; color:white; padding:4px 12px; border-radius:15px; font-size:13px; font-weight:bold;";
+                pill.innerHTML = `
+                    <span>${bus}</span>
+                    <span style="margin-left:10px; cursor:pointer; font-weight:normal;" onclick="removeBus(${index})">✕</span>
+                `;
+                container.appendChild(pill);
+            });
+
+            // Update the hidden input so InkyPi can save it
+            hiddenInput.value = JSON.stringify(busList);
+        }
+
+        // 3. Add function
+        addBtn.addEventListener('click', () => {
+            const val = busInput.value.trim().toUpperCase();
+            if (val && !busList.includes(val)) {
+                busList.push(val);
+                busInput.value = '';
+                refreshBusDisplay();
+            }
+        });
+
+        // Handle 'Enter' key
+        busInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addBtn.click();
+            }
+        });
+
+        // 4. Remove function (attached to window so onclick works)
+        window.removeBus = (index) => {
+            busList.splice(index, 1);
+            refreshBusDisplay();
+        };
+
+        // Initial load
+        refreshBusDisplay();
     });
 </script>
