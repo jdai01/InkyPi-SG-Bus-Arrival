@@ -4,30 +4,29 @@
     <input type="hidden" id="watches" name="watches" value="[]">
 </div>
 
-<div class="form-group" style="border: 1px solid rgba(128,128,128,0.3); border-radius: 8px; padding: 12px; display: grid; grid-template-columns: 1fr">
+<div class="form-group" style="border: 1px solid rgba(128,128,128,0.3); border-radius: 8px; padding: 12px; display: grid; grid-template-columns: 1fr; gap: 20px;">
 
-    <!-- Bus Stop Grid -->
-    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; align-items: center; grid-column: span 1;"></div>
+    <!-- Bus Stop -->
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; align-items: center;">
         <div style="grid-column: span 5;">
-            <label class="form-label">Add Bus Stop</label>
+            <label class="form-label">Bus Stop</label>
         </div>
 
-        <div style="grid-column: span 1;">
-            <label class="form-label" for="bus_input_field" style="margin: 0;">Bus Stop ID:</label>
+        <div style="grid-column: span 1; text-align: right;">
+            <label class="form-label" for="station_id" style="margin: 0;">ID:</label>
         </div>
-        <div style="grid-column: span 4; display: flex; gap: 8px;">
-            <input type="text" id="station_id" name="station_id" class="form-input" placeholder="Enter Bus Stop ID...">
+        <div style="grid-column: span 4;">
+            <input type="text" id="station_id" name="station_id" class="form-input" style="width: 100%;" placeholder="Enter Bus Stop ID...">
         </div>
     </div>
 
-    <!-- Buses Grid -->
-    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; align-items: center; grid-column: span 1;">
-        
+    <!-- Buses -->
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; align-items: center;">
         <div style="grid-column: span 5;">
-            <label class="form-label">Bus Services to display</label>
+            <label class="form-label">Bus Services to Display</label>
         </div>
 
-        <div style="grid-column: span 1;">
+        <div style="grid-column: span 1; text-align: right;">
             <label class="form-label" for="bus_input_field" style="margin: 0;">Buses:</label>
         </div>
         <div style="grid-column: span 4; display: flex; gap: 8px;">
@@ -39,11 +38,13 @@
         <div id="bus_list_container" style="grid-column: span 4; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border: 1px dashed #ccc; border-radius: 4px; min-height: 44px; background: rgba(0,0,0,0.02);">
             <span id="empty_msg" style="opacity:0.5; font-size: 0.9em;">No buses added yet</span>
         </div>
-
-        <input type="hidden" name="selected_buses" id="selected_buses_hidden">
     </div>
 
-    <button type="button" id="addWatchBtn" class="form-input collapsible" onclick="addWatch()" disabled>Add to Board</button>
+    <button type="button" id="addWatchBtn" class="form-input collapsible" onclick="addWatch()" disabled style="width: 100%; margin-top: 10px;">
+        Add to Board
+    </button>
+
+    <input type="hidden" name="selected_buses" id="selected_buses_hidden">
 </div>
 
 
