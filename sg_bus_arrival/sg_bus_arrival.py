@@ -155,19 +155,6 @@ class SGBusArrival(BasePlugin):
         }
         template_params['style_settings'] = True
 
-        # Fetch API from env
-        device_config = current_app.config.get('DEVICE_CONFIG')
-        api_key = device_config.load_env_key("LTA_DATAMALL_API_KEY")
-
-        try:
-            stations = _get_station_index(api_key)
-        except Exception as e:
-            logger.error(f"Failed to preload station index: {e}")
-            stations = {}
-
-        template_params['stations_json'] = json.dumps(stations)
-
-
         return template_params
 
     def generate_image(self, settings, device_config):
@@ -190,6 +177,17 @@ class SGBusArrival(BasePlugin):
             PIL.Image.Image:
                 The rendered image to be displayed on the device.
         """
+        # Fetch API from env
+        device_config = current_app.config.get('DEVICE_CONFIG')
+        api_key = device_config.load_env_key("LTA_DATAMALL_API_KEY")
+        
+        bus_stop_id = settings.get('station_id', 'None')
+        bus_list = settings.get('selected_buses', '[]')
+
+        logger.info(f"Bus stop id: {bus_stop_id}")
+        logger.info(f"Buses selected: {bus_list}")
+
+
         # Example: load a value from plugin settings
         text = settings.get("title") or "Hello World"
 
