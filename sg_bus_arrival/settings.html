@@ -4,21 +4,27 @@
     <input type="hidden" id="watches" name="watches" value="[]">
 </div>
 
-<div class="form-group" style="border: 1px solid rgba(128,128,128,0.3); border-radius: 8px; padding: 12px; display:flex; flex-wrap:wrap; gap:6px;">
-    <label class="form-label">Add Bus Stop</label>
+<div class="form-group" style="border: 1px solid rgba(128,128,128,0.3); border-radius: 8px; padding: 12px; display: grid;">
 
-    <div class="form-group">
-        <label class="form-label" for="sel_station" >Bus Stop: </label>
-        <div class="form-group">
-            <span>ID </span>
+    <!-- Bus Stop Grid -->
+    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; align-items: center;"></div>
+        <div style="grid-column: span 5;">
+            <label class="form-label">Add Bus Stop</label>
+        </div>
+
+        <div style="grid-column: span 1;">
+            <label class="form-label" for="bus_input_field" style="margin: 0;">Bus Stop ID:</label>
+        </div>
+        <div style="grid-column: span 4; display: flex; gap: 8px;">
             <input type="text" id="station_id" name="station_id" class="form-input" placeholder="Enter Bus Stop ID...">
         </div>
     </div>
 
-    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 10px; align-items: center;">
+    <!-- Buses Grid -->
+    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; align-items: center;">
         
         <div style="grid-column: span 5;">
-            <label class="form-label" style="font-weight: bold; margin-bottom: 5px; display: block;">Bus Services to display</label>
+            <label class="form-label">Bus Services to display</label>
         </div>
 
         <div style="grid-column: span 1;">
