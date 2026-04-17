@@ -20,22 +20,22 @@
         </div> -->
     </div>
 
-    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; align-items: center;">
+    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 10px; align-items: center;">
         
-        <div style="grid-column: span 3;">
+        <div style="grid-column: span 5;">
             <label class="form-label" style="font-weight: bold; margin-bottom: 5px; display: block;">Bus Services to display</label>
         </div>
 
         <div style="grid-column: span 1;">
             <label class="form-label" for="bus_input_field" style="margin: 0;">Buses:</label>
         </div>
-        <div style="grid-column: span 2; display: flex; gap: 8px;">
+        <div style="grid-column: span 4; display: flex; gap: 8px;">
             <input type="text" id="bus_input_field" class="form-input" placeholder="e.g. 166, 5" style="flex: 1;">
             <button type="button" id="add_bus_btn" class="btn action-btn">Add</button>
         </div>
 
         <div></div> 
-        <div id="bus_list_container" style="grid-column: span 2; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border: 1px dashed #ccc; border-radius: 4px; min-height: 44px; background: rgba(0,0,0,0.02);">
+        <div id="bus_list_container" style="grid-column: span 4; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border: 1px dashed #ccc; border-radius: 4px; min-height: 44px; background: rgba(0,0,0,0.02);">
             <span id="empty_msg" style="opacity:0.5; font-size: 0.9em;">No buses added yet</span>
         </div>
 
