@@ -180,6 +180,12 @@ class SGBusArrival(BasePlugin):
         # Fetch API from env
         device_config = current_app.config.get('DEVICE_CONFIG')
         api_key = device_config.load_env_key("LTA_DATAMALL_API_KEY")
+        
+        bus_stop_id = settings.get('station_id', 'None')
+        bus_list = settings.get('selected_buses', '[]')
+
+        logger.info(f"Bus stop id: {bus_stop_id}")
+        logger.info(f"Buses selected: {bus_list}")
 
 
         # Example: load a value from plugin settings

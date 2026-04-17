@@ -11,15 +11,30 @@
         <label class="form-label" for="sel_station" >Bus Stop: </label>
         <div class="form-group">
             <span>ID </span>
-            <input type="text" id="station_id" class="form-input" placeholder="Enter Bus Stop ID...">
+            <input type="text" id="station_id" name="station_id" class="form-input" placeholder="Enter Bus Stop ID...">
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="sel_lines" class="form-label">Buses</label>
-        <div id="lineCheckboxes" class="form-group" style="display:flex; flex-wrap:wrap; gap:6px;">
-            <span style="opacity:0.5;">Select a bus stop first</span>
+    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 10px; align-items: center;">
+        
+        <div style="grid-column: span 5;">
+            <label class="form-label" style="font-weight: bold; margin-bottom: 5px; display: block;">Bus Services to display</label>
         </div>
+
+        <div style="grid-column: span 1;">
+            <label class="form-label" for="bus_input_field" style="margin: 0;">Buses:</label>
+        </div>
+        <div style="grid-column: span 4; display: flex; gap: 8px;">
+            <input type="text" id="bus_input_field" class="form-input" placeholder="e.g. 166, 5" style="flex: 1;">
+            <button type="button" id="add_bus_btn" class="btn action-btn">Add</button>
+        </div>
+
+        <div></div> 
+        <div id="bus_list_container" style="grid-column: span 4; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border: 1px dashed #ccc; border-radius: 4px; min-height: 44px; background: rgba(0,0,0,0.02);">
+            <span id="empty_msg" style="opacity:0.5; font-size: 0.9em;">No buses added yet</span>
+        </div>
+
+        <input type="hidden" name="selected_buses" id="selected_buses_hidden">
     </div>
 
     <button type="button" id="addWatchBtn" class="form-input collapsible" onclick="addWatch()" disabled>Add to Board</button>
@@ -36,7 +51,47 @@
      *
      * This script automatically fills inputs with saved settings.
      */
-    document.addEventListener('DOMContentLoaded', () => {    
-        
+    document.addEventListener('DOMContentLoaded', () => {
+        const busInput = document.getElementById('bus_input_field');
+        const addBtn = document.getElementById('add_bus_btn');
+        const container = document.getElementById('bus_list_container');
+        const hiddenInput = document.getElementById('selected_buses_hidden');
+
+        let busList = [];
+
+        function refreshBusDisplay() {
+            container.innerHTML = '';
+            if (busList.length === 0) {
+                container.innerHTML = '<span style="opacity:0.5; font-size: 0.9em;">No buses added yet</span>';
+            }
+
+            busList.forEach((bus, index) => {
+                const pill = document.createElement('div');
+                pill.style.cssText = "display:flex; align-items:center; background:#00E000; color:white; padding:2px 10px; border-radius:12px; font-size:12px;";
+                pill.innerHTML = `
+                    <span>${bus}</span>
+                    <span style="margin-left:8px; cursor:pointer;" onclick="removeBus(${index})">✕</span>
+                `;
+                container.appendChild(pill);
+            });
+
+            hiddenInput.value = JSON.stringify(busList);
+        }
+
+        addBtn.addEventListener('click', () => {
+            const val = busInput.value.trim().toUpperCase();
+            if (val && !busList.includes(val)) {
+                busList.push(val);
+                busInput.value = '';
+                refreshBusDisplay();
+            }
+        });
+
+        window.removeBus = (index) => {
+            busList.splice(index, 1);
+            refreshBusDisplay();
+        };
+
+        refreshBusDisplay();
     });
 </script>
