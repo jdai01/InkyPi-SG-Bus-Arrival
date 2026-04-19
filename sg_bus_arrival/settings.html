@@ -156,18 +156,15 @@
         }
 
         const station_id = document.getElementById('station_id').value;
-        console.log(station_id);
         if (!station_id) return;
 
         const selected_buses = getBuses();
-        console.log(selected_buses)
         if (selected_buses.length === 0) return;
 
         const watch = {
             station_id: station_id,
             selected_buses: selected_buses,
         };
-        console.log(watch);
 
         watches.push(watch);
         renderWatchList();
@@ -217,6 +214,7 @@
             return;
         }
 
+        console.log(watches);
         watches.forEach((w, i) => {
             const row = document.createElement('div');
             row.className = 'form-group';
@@ -224,10 +222,8 @@
 
             const text = document.createElement('div');
             text.style.flex = '1';
-
-            const lineDesc = w.selected_buses
             
-            text.textContent = `${w.station_name} — ${selected_buses}`;
+            text.textContent = `${w.station_name} — ${w.selected_buses}`;
 
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
