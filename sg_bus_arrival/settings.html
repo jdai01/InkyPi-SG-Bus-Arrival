@@ -51,81 +51,126 @@
 
 
 <script>
-    /**
-     * Populate plugin settings form fields on page load when editing an existing plugin instance.
-     *
-     * - `loadPluginSettings` is a boolean flag indicating whether the form
-     *   is editing an existing plugin (true) or creating a new plugin (false).
-     * - `pluginSettings` is an object containing saved values for this plugin.
-     *
-     * This script automatically fills inputs with saved settings.
-     */
-    document.addEventListener('DOMContentLoaded', () => {
-        const busInput = document.getElementById('bus_input_field');
-        const addBtn = document.getElementById('add_bus_btn');
-        const container = document.getElementById('bus_list_container');
-        const hiddenInput = document.getElementById('selected_buses_hidden');
+/**
+ * Populate plugin settings form fields on page load when editing an existing plugin instance.
+ *
+ * - `loadPluginSettings` is a boolean flag indicating whether the form
+ *   is editing an existing plugin (true) or creating a new plugin (false).
+ * - `pluginSettings` is an object containing saved values for this plugin.
+ *
+ * This script automatically fills inputs with saved settings.
+ */
 
-        let busList = [];
 
-        function refreshBusDisplay() {
-            // 1. Sort the list: Numeric ascending, then alphabetical
-            busList.sort((a, b) => {
-                // Use regex to separate the leading number from any trailing letters
-                const parse = (str) => {
-                    const match = str.match(/^(\d+)(.*)$/);
-                    return match 
-                        ? { num: parseInt(match[1], 10), rest: match[2] } 
-                        : { num: Infinity, rest: str }; // Fallback for non-numeric strings
-                };
+let tempBusList = [];
 
-                const partA = parse(a);
-                const partB = parse(b);
+function refreshBusDisplay() {
 
-                // Compare numbers first
-                if (partA.num !== partB.num) {
-                    return partA.num - partB.num;
-                }
-                // If numbers are the same, compare the suffix (e.g., 12 vs 12A)
-                return partA.rest.localeCompare(partB.rest);
-            });
+    const container = document.getElementById('bus_list_container');
+    const hiddenInput = document.getElementById('selected_buses_hidden');
 
-            // 2. Clear and Render
-            container.innerHTML = '';
-            if (busList.length === 0) {
-                container.innerHTML = '<span style="opacity:0.5; font-size: 0.9em;">No buses added yet</span>';
-            }
+    sortBusList(busList);
 
-            busList.forEach((bus, index) => {
-                const pill = document.createElement('div');
-                pill.id = bus;
-                pill.style.cssText = "display:flex; align-items:center; background:#00E000; color:white; padding:2px 10px; border-radius:12px; font-size:12px;";
-                pill.innerHTML = `
-                    <span>${bus}</span>
-                    <span style="margin-left:8px; cursor:pointer;" onclick="removeBus(${index})">✕</span>
-                `;
-                container.appendChild(pill);
-            });
+    // Render Bus List Container
+    container.innerHTML = '';
+    if (busList.length === 0) {
+        container.innerHTML = '<span style="opacity:0.5; font-size: 0.9em;">No buses added yet</span>';
+    }
 
-            hiddenInput.value = JSON.stringify(busList);
-        }
+    tempBusList.forEach((bus, index) => {
+        const pill = document.createElement('div');
+        pill.id = bus;
+        pill.style.cssText = "display:flex; align-items:center; background:#00E000; color:white; padding:2px 10px; border-radius:12px; font-size:12px;";
+        pill.innerHTML = `
+            <span>${bus}</span>
+            <span style="margin-left:8px; cursor:pointer;" onclick="removeBus(${index})">✕</span>
+        `;
+        container.appendChild(pill);
+    });
 
-        addBtn.addEventListener('click', () => {
-            const val = busInput.value.trim().toUpperCase();
-            if (val && !busList.includes(val)) {
-                busList.push(val);
-                busInput.value = '';
-                refreshBusDisplay();
-            }
-        });
+    hiddenInput.value = JSON.stringify(busList);
+}
 
-        window.removeBus = (index) => {
-            busList.splice(index, 1);
+
+function removeBusDisplay(index) {
+    tempBusList.splice(index, 1);
+    refreshBusDisplay();
+} 
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const busInput = document.getElementById('bus_input_field');
+    const addBusBtn = document.getElementById('add_bus_btn');
+
+    addBusBtn.addEventListener('click', () => {
+        const val = busInput.value.trim().toUpperCase();
+        if (val && !busList.includes(val)) {
+            busList.push(val);
+            busInput.value = '';
             refreshBusDisplay();
+        }
+    });
+
+    window.removeBus = (index) => {
+        busList.splice(index, 1);
+        refreshBusDisplay();
+    };
+
+    refreshBusDisplay();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Sorts an array of bus strings: Numeric value first, then alphabetical suffix.
+ * Example: ["12A", "2", "12"] -> ["2", "12", "12A"]
+ */
+function sortBusList(list) {
+    return list.sort((a, b) => {
+        const parse = (str) => {
+            const match = str.match(/^(\d+)(.*)$/);
+            return match 
+                ? { num: parseInt(match[1], 10), rest: match[2] } 
+                : { num: Infinity, rest: str };
         };
 
-        refreshBusDisplay();
+        const partA = parse(a);
+        const partB = parse(b);
+
+        if (partA.num !== partB.num) {
+            return partA.num - partB.num;
+        }
+        return partA.rest.localeCompare(partB.rest);
     });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function getBuses() {
         const hiddenInput = document.getElementById('selected_buses_hidden');
