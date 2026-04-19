@@ -69,11 +69,11 @@ function refreshBusDisplay() {
     const container = document.getElementById('bus_list_container');
     const hiddenInput = document.getElementById('selected_buses_hidden');
 
-    sortBusList(busList);
+    sortBusList(tempBusList);
 
     // Render Bus List Container
     container.innerHTML = '';
-    if (busList.length === 0) {
+    if (tempBusList.length === 0) {
         container.innerHTML = '<span style="opacity:0.5; font-size: 0.9em;">No buses added yet</span>';
     }
 
@@ -88,7 +88,7 @@ function refreshBusDisplay() {
         container.appendChild(pill);
     });
 
-    hiddenInput.value = JSON.stringify(busList);
+    hiddenInput.value = JSON.stringify(tempBusList);
 }
 
 
@@ -104,15 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addBusBtn.addEventListener('click', () => {
         const val = busInput.value.trim().toUpperCase();
-        if (val && !busList.includes(val)) {
-            busList.push(val);
+        if (val && !tempBusList.includes(val)) {
+            tempBusList.push(val);
             busInput.value = '';
             refreshBusDisplay();
         }
     });
 
     window.removeBus = (index) => {
-        busList.splice(index, 1);
+        tempBusList.splice(index, 1);
         refreshBusDisplay();
     };
 
@@ -172,113 +172,113 @@ function sortBusList(list) {
 
 
 
-    function getBuses() {
-        const hiddenInput = document.getElementById('selected_buses_hidden');
+    // function getBuses() {
+    //     const hiddenInput = document.getElementById('selected_buses_hidden');
         
-        if (hiddenInput && hiddenInput.value) {
-            try {
-                // Parse the JSON string back into an array
-                const buses = JSON.parse(hiddenInput.value);
-                console.log("Current buses:", buses);
-                return buses;
-            } catch (e) {
-                console.error("Error parsing bus list", e);
-                return [];
-            }
-        }
-        return [];
-    }
+    //     if (hiddenInput && hiddenInput.value) {
+    //         try {
+    //             // Parse the JSON string back into an array
+    //             const buses = JSON.parse(hiddenInput.value);
+    //             console.log("Current buses:", buses);
+    //             return buses;
+    //         } catch (e) {
+    //             console.error("Error parsing bus list", e);
+    //             return [];
+    //         }
+    //     }
+    //     return [];
+    // }
 
 
 
-    let watches = []; // Assuming this is defined globally
+    // let watches = []; // Assuming this is defined globally
 
-    function addWatch() {
-        // 1. Check if the limit (2) has already been reached
-        if (watches.length >= 2) {
-            alert("Maximum of 2 bus stops allowed on the arrival board.");
-            return;
-        }
+    // function addWatch() {
+    //     // 1. Check if the limit (2) has already been reached
+    //     if (watches.length >= 2) {
+    //         alert("Maximum of 2 bus stops allowed on the arrival board.");
+    //         return;
+    //     }
 
-        const station_id = document.getElementById('station_id').value;
-        if (!station_id) return;
+    //     const station_id = document.getElementById('station_id').value;
+    //     if (!station_id) return;
 
-        const selected_buses = getBuses();
-        if (selected_buses.length === 0) return;
+    //     const selected_buses = getBuses();
+    //     if (selected_buses.length === 0) return;
 
-        const watch = {
-            station_id: station_id,
-            selected_buses: selected_buses,
-        };
+    //     const watch = {
+    //         station_id: station_id,
+    //         selected_buses: selected_buses,
+    //     };
 
-        watches.push(watch);
-        renderWatchList();
+    //     watches.push(watch);
+    //     renderWatchList();
 
-        // Reset the form
-        document.getElementById('station_id').value = '';
-        busList = [];
-        refreshBusDisplay();
+    //     // Reset the form
+    //     document.getElementById('station_id').value = '';
+    //     busList = [];
+    //     refreshBusDisplay();
         
-        // Update button state immediately
-        checkLimit();
-    }
+    //     // Update button state immediately
+    //     checkLimit();
+    // }
 
-    function removeWatch(index) {
-        watches.splice(index, 1);
-        renderWatchList();
-        checkLimit(); // Re-enable the button if a stop was removed
-    }
+    // function removeWatch(index) {
+    //     watches.splice(index, 1);
+    //     renderWatchList();
+    //     checkLimit(); // Re-enable the button if a stop was removed
+    // }
 
-    /**
-     * Helper to disable/enable the Add button based on list size
-     */
-    function checkLimit() {
-        const addBtn = document.getElementById('addWatchBtn');
-        if (watches.length >= 2) {
-            addBtn.disabled = true;
-            addBtn.title = "Maximum 2 stops reached";
-        } else {
-            // Only enable if a station is actually selected (logic may vary based on your UI)
-            const cid = document.getElementById('sel_station').value;
-            addBtn.disabled = !cid; 
-            addBtn.title = "";
-        }
-    }
+    // /**
+    //  * Helper to disable/enable the Add button based on list size
+    //  */
+    // function checkLimit() {
+    //     const addBtn = document.getElementById('addWatchBtn');
+    //     if (watches.length >= 2) {
+    //         addBtn.disabled = true;
+    //         addBtn.title = "Maximum 2 stops reached";
+    //     } else {
+    //         // Only enable if a station is actually selected (logic may vary based on your UI)
+    //         const cid = document.getElementById('sel_station').value;
+    //         addBtn.disabled = !cid; 
+    //         addBtn.title = "";
+    //     }
+    // }
 
-    function renderWatchList() {
-        const container = document.getElementById('watchList');
-        const hiddenInput = document.getElementById('watches');
+    // function renderWatchList() {
+    //     const container = document.getElementById('watchList');
+    //     const hiddenInput = document.getElementById('watches');
         
-        if (hiddenInput) {
-            hiddenInput.value = JSON.stringify(watches);
-        }
+    //     if (hiddenInput) {
+    //         hiddenInput.value = JSON.stringify(watches);
+    //     }
 
-        container.innerHTML = '';
-        if (watches.length === 0) {
-            container.innerHTML = '<div style="opacity:0.5; padding:8px 0;">No stations added yet. Use the form below to add stations to your board.</div>';
-            return;
-        }
+    //     container.innerHTML = '';
+    //     if (watches.length === 0) {
+    //         container.innerHTML = '<div style="opacity:0.5; padding:8px 0;">No stations added yet. Use the form below to add stations to your board.</div>';
+    //         return;
+    //     }
 
-        console.log(watches);
-        watches.forEach((w, i) => {
-            const row = document.createElement('div');
-            row.className = 'form-group';
-            row.style.cssText = 'display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid rgba(128,128,128,0.2);';
+    //     console.log(watches);
+    //     watches.forEach((w, i) => {
+    //         const row = document.createElement('div');
+    //         row.className = 'form-group';
+    //         row.style.cssText = 'display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid rgba(128,128,128,0.2);';
 
-            const text = document.createElement('div');
-            text.style.flex = '1';
+    //         const text = document.createElement('div');
+    //         text.style.flex = '1';
             
-            text.textContent = `${w.station_name} — ${w.selected_buses}`;
+    //         text.textContent = `${w.station_name} — ${w.selected_buses}`;
 
-            const removeBtn = document.createElement('button');
-            removeBtn.type = 'button';
-            removeBtn.innerText = '✕';
-            removeBtn.classList.add('remove-btn');
-            removeBtn.onclick = () => removeWatch(i);
+    //         const removeBtn = document.createElement('button');
+    //         removeBtn.type = 'button';
+    //         removeBtn.innerText = '✕';
+    //         removeBtn.classList.add('remove-btn');
+    //         removeBtn.onclick = () => removeWatch(i);
 
-            row.appendChild(text);
-            row.appendChild(removeBtn);
-            container.appendChild(row);
-        });
-    }
+    //         row.appendChild(text);
+    //         row.appendChild(removeBtn);
+    //         container.appendChild(row);
+    //     });
+    // }
 </script>
