@@ -76,6 +76,7 @@
 
             busList.forEach((bus, index) => {
                 const pill = document.createElement('div');
+                pill.id = bus;
                 pill.style.cssText = "display:flex; align-items:center; background:#00E000; color:white; padding:2px 10px; border-radius:12px; font-size:12px;";
                 pill.innerHTML = `
                     <span>${bus}</span>
@@ -104,7 +105,25 @@
         refreshBusDisplay();
     });
 
-    
+    function getBuses() {
+        const hiddenInput = document.getElementById('selected_buses_hidden');
+        
+        if (hiddenInput && hiddenInput.value) {
+            try {
+                // Parse the JSON string back into an array
+                const buses = JSON.parse(hiddenInput.value);
+                console.log("Current buses:", buses);
+                return buses;
+            } catch (e) {
+                console.error("Error parsing bus list", e);
+                return [];
+            }
+        }
+        return [];
+    }
+
+
+
     let watches = []; // Assuming this is defined globally
 
     function addWatch() {
@@ -114,25 +133,19 @@
             return;
         }
 
-        const cid = document.getElementById('sel_station').value;
-        if (!cid || !stations[cid]) return;
+        const station_id = document.getElementById('sel_station').value;
+        console.log(station_id);
+        if (!station_id) return;
 
-        const info = stations[cid];
-        const selectedLines = getSelectedLines();
+        const selected_buses = getBuses();
+        console.log(getBuses)
         if (selectedLines.length === 0) return;
 
-        const direction = document.getElementById('sel_direction').value;
-
         const watch = {
-            complex_id: cid,
-            station_name: info.name,
-            stop_ids: info.stop_ids,
-            lines: selectedLines,
-            direction: direction,
-            north_label: info.north_label || 'Uptown',
-            south_label: info.south_label || 'Downtown',
-            line_filter: selectedLines.length === info.lines.length ? '' : selectedLines.join(','),
+            station_id: station_id,
+            selected_buses: selected_buses,
         };
+        console.log(watch);
 
         watches.push(watch);
         renderWatchList();
@@ -146,66 +159,66 @@
         checkLimit();
     }
 
-    function removeWatch(index) {
-        watches.splice(index, 1);
-        renderWatchList();
-        checkLimit(); // Re-enable the button if a stop was removed
-    }
+    // function removeWatch(index) {
+    //     watches.splice(index, 1);
+    //     renderWatchList();
+    //     checkLimit(); // Re-enable the button if a stop was removed
+    // }
 
-    /**
-     * Helper to disable/enable the Add button based on list size
-     */
-    function checkLimit() {
-        const addBtn = document.getElementById('addWatchBtn');
-        if (watches.length >= 2) {
-            addBtn.disabled = true;
-            addBtn.title = "Maximum 2 stops reached";
-        } else {
-            // Only enable if a station is actually selected (logic may vary based on your UI)
-            const cid = document.getElementById('sel_station').value;
-            addBtn.disabled = !cid; 
-            addBtn.title = "";
-        }
-    }
+    // /**
+    //  * Helper to disable/enable the Add button based on list size
+    //  */
+    // function checkLimit() {
+    //     const addBtn = document.getElementById('addWatchBtn');
+    //     if (watches.length >= 2) {
+    //         addBtn.disabled = true;
+    //         addBtn.title = "Maximum 2 stops reached";
+    //     } else {
+    //         // Only enable if a station is actually selected (logic may vary based on your UI)
+    //         const cid = document.getElementById('sel_station').value;
+    //         addBtn.disabled = !cid; 
+    //         addBtn.title = "";
+    //     }
+    // }
 
-    function renderWatchList() {
-        const container = document.getElementById('watchList');
-        const hiddenInput = document.getElementById('watches');
+    // function renderWatchList() {
+    //     const container = document.getElementById('watchList');
+    //     const hiddenInput = document.getElementById('watches');
         
-        if (hiddenInput) {
-            hiddenInput.value = JSON.stringify(watches);
-        }
+    //     if (hiddenInput) {
+    //         hiddenInput.value = JSON.stringify(watches);
+    //     }
 
-        container.innerHTML = '';
-        if (watches.length === 0) {
-            container.innerHTML = '<div style="opacity:0.5; padding:8px 0;">No stations added yet. Use the form below to add stations to your board.</div>';
-            return;
-        }
+    //     container.innerHTML = '';
+    //     if (watches.length === 0) {
+    //         container.innerHTML = '<div style="opacity:0.5; padding:8px 0;">No stations added yet. Use the form below to add stations to your board.</div>';
+    //         return;
+    //     }
 
-        watches.forEach((w, i) => {
-            const row = document.createElement('div');
-            row.className = 'form-group';
-            row.style.cssText = 'display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid rgba(128,128,128,0.2);';
+    //     watches.forEach((w, i) => {
+    //         const row = document.createElement('div');
+    //         row.className = 'form-group';
+    //         row.style.cssText = 'display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid rgba(128,128,128,0.2);';
 
-            const text = document.createElement('div');
-            text.style.flex = '1';
+    //         const text = document.createElement('div');
+    //         text.style.flex = '1';
 
-            const lineDesc = w.line_filter || 'All Lines';
-            let dirDesc = 'Both';
-            if (w.direction === 'N') dirDesc = w.north_label;
-            if (w.direction === 'S') dirDesc = w.south_label;
+    //         const lineDesc = w.line_filter || 'All Lines';
+    //         let dirDesc = 'Both';
+    //         if (w.direction === 'N') dirDesc = w.north_label;
+    //         if (w.direction === 'S') dirDesc = w.south_label;
             
-            text.textContent = `${w.station_name} — ${lineDesc} · ${dirDesc}`;
+    //         text.textContent = `${w.station_name} — ${lineDesc} · ${dirDesc}`;
 
-            const removeBtn = document.createElement('button');
-            removeBtn.type = 'button';
-            removeBtn.innerText = '✕';
-            removeBtn.classList.add('remove-btn');
-            removeBtn.onclick = () => removeWatch(i);
+    //         const removeBtn = document.createElement('button');
+    //         removeBtn.type = 'button';
+    //         removeBtn.innerText = '✕';
+    //         removeBtn.classList.add('remove-btn');
+    //         removeBtn.onclick = () => removeWatch(i);
 
-            row.appendChild(text);
-            row.appendChild(removeBtn);
-            container.appendChild(row);
-        });
-    }
+    //         row.appendChild(text);
+    //         row.appendChild(removeBtn);
+    //         container.appendChild(row);
+    //     });
+    // }
 </script>
