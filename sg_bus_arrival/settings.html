@@ -69,6 +69,28 @@
         let busList = [];
 
         function refreshBusDisplay() {
+            // 1. Sort the list: Numeric ascending, then alphabetical
+            busList.sort((a, b) => {
+                // Use regex to separate the leading number from any trailing letters
+                const parse = (str) => {
+                    const match = str.match(/^(\d+)(.*)$/);
+                    return match 
+                        ? { num: parseInt(match[1], 10), rest: match[2] } 
+                        : { num: Infinity, rest: str }; // Fallback for non-numeric strings
+                };
+
+                const partA = parse(a);
+                const partB = parse(b);
+
+                // Compare numbers first
+                if (partA.num !== partB.num) {
+                    return partA.num - partB.num;
+                }
+                // If numbers are the same, compare the suffix (e.g., 12 vs 12A)
+                return partA.rest.localeCompare(partB.rest);
+            });
+
+            // 2. Clear and Render
             container.innerHTML = '';
             if (busList.length === 0) {
                 container.innerHTML = '<span style="opacity:0.5; font-size: 0.9em;">No buses added yet</span>';
