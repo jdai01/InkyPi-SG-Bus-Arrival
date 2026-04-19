@@ -170,9 +170,9 @@
         renderWatchList();
 
         // Reset the form
-        document.getElementById('sel_station').value = '';
-        document.getElementById('sel_direction').value = '';
-        document.getElementById('lineCheckboxes').innerHTML = '<span style="opacity:0.5;">Select a station first</span>';
+        document.getElementById('station_id').value = '';
+        busList = [];
+        refreshBusDisplay();
         
         // Update button state immediately
         checkLimit();
