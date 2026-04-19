@@ -44,7 +44,7 @@
         <input type="hidden" name="selected_buses" id="selected_buses_hidden">
     </div>
 
-    <button type="button" id="addWatchBtn" class="form-input collapsible" onclick="addWatch()" disabled style="width: 100%; margin-top: 10px;">
+    <button type="button" id="addWatchBtn" class="form-input collapsible" onclick="addWatch()" style="width: 100%; margin-top: 10px;">
         Add to Board
     </button>
 </div>
@@ -156,7 +156,7 @@
         document.getElementById('lineCheckboxes').innerHTML = '<span style="opacity:0.5;">Select a station first</span>';
         
         // Update button state immediately
-        checkLimit();
+        // checkLimit();
     }
 
     // function removeWatch(index) {
